@@ -21,7 +21,8 @@ filters = {
             (mp_pose.PoseLandmark.RIGHT_WRIST, mp_pose.PoseLandmark.RIGHT_ANKLE),
         ],
         'custom_landmarks': [(mp_pose.PoseLandmark.LEFT_HIP,
-            mp_pose.PoseLandmark.RIGHT_HIP)]
+            mp_pose.PoseLandmark.RIGHT_HIP)],
+        'prolonged': []
         },
     'straight_arms': {
         'landmarks': [
@@ -38,7 +39,8 @@ filters = {
             (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
             (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
         ],
-        'custom_landmarks': []
+        'custom_landmarks': [],
+        'prolonged': []
         },
     'elbow_to_knee': {
         'landmarks': [
@@ -52,8 +54,19 @@ filters = {
         'custom_landmarks': [
             (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_KNEE),
             (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_KNEE),
-            ]
+            ],
+        'prolonged': []
         },
+    'setter': {
+        'landmarks': [
+        ],
+        'connections': [
+        ],
+        'custom_landmarks': [],
+        'prolonged': [
+            (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, 3, 2),
+            ]
+        }
     }
 
 
@@ -68,6 +81,14 @@ def _get_midpoint(px_0, px_1):
     return (
         int((px_0[0] + px_1[0]) / 2),
         int((px_0[1] + px_1[1]) / 2))
+
+
+def _get_endpoints(px_0, px_1, length_1=3, length_2=1):
+    direction = (px_0[0] - px_1[0], px_0[1] - px_1[1])
+    return (
+        (px_0[0] + length_1 * direction[0], px_0[1] + length_1 * direction[1]),
+        (px_1[0] - length_2 * direction[0], px_1[1] - length_2 * direction[1])
+        )
 
 
 def analyze(url, filt):
@@ -111,6 +132,16 @@ def analyze(url, filt):
             if px_0 != None and px_1 != None:
                 midpoint = _get_midpoint(px_0, px_1)
                 cv2.circle(frame, midpoint, 10, (0,0,255), -1)
+                endpoints = _get_endpoints(px_0, px_1)
+                cv2.line(frame, endpoints[0], endpoints[1], (0,0,255), 5)
+
+        for line in active_filter['prolonged']:
+            px_0 = _get_pixel(line[0], res, frame_width, frame_height)
+            px_1 = _get_pixel(line[1], res, frame_width, frame_height)
+
+            if px_0 != None and px_1 != None:
+                endpoints = _get_endpoints(px_0, px_1, line[2], line[3])
+                cv2.line(frame, endpoints[0], endpoints[1], (0,0,255), 5)
 
         cv2.imshow('cam', frame)
         out.write(frame)

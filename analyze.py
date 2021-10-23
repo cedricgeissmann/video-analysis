@@ -101,7 +101,7 @@ def analyze(url, filt):
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    out = cv2.VideoWriter(os.path.join("analyzed", f'analyzed_{filename}'), cv2.VideoWriter_fourcc('M','J','P','G'), fps, (frame_width,frame_height))
+    out = cv2.VideoWriter(os.path.join("analyzed", f'analyzed_{filt}_{filename}'), cv2.VideoWriter_fourcc('M','J','P','G'), fps, (frame_width,frame_height))
 
     active_filter = filters.get(filt)
     while True:

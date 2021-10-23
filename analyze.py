@@ -95,7 +95,8 @@ def analyze(url, filt):
     cap = cv2.VideoCapture(url)
     pose = mp_pose.Pose()
 
-    filename = os.path.basename(url)
+    filename = os.path.basename(url) if url != "0" else "0"
+
 
     cv2.namedWindow('cam', cv2.WINDOW_NORMAL)
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))

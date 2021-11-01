@@ -7,6 +7,14 @@ mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
 
 filters = {
+    'test': {
+        'landmarks': [ ],
+        'connections': [
+            (mp_pose.PoseLandmark.LEFT_WRIST, mp_pose.PoseLandmark.RIGHT_WRIST),
+        ],
+        'custom_landmarks': [],
+        'prolonged': []
+        },
     'box': {
         'landmarks': [
             mp_pose.PoseLandmark.LEFT_WRIST,
@@ -96,7 +104,6 @@ def analyze(url, filt):
     pose = mp_pose.Pose()
 
     filename = os.path.basename(url) if url != "0" else "0"
-
 
     cv2.namedWindow('cam', cv2.WINDOW_NORMAL)
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))

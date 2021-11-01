@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from math import acos, degrees
 import cv2
 
 import utils
@@ -72,6 +73,7 @@ class ProlongedLandmark(Landmark):
         super().__init__(landmarks, style=style)
         self.lengthen_first = lengthen_first
         self.lengthen_second = lengthen_second
+
     def apply(self, res, frame, frame_width, frame_height):
         for line in self.landmarks:
             px_0 = utils._get_pixel(line[0], res, frame_width, frame_height)
@@ -85,7 +87,49 @@ class ProlongedLandmark(Landmark):
                 )
 
 
+class AngleLandmark(Landmark):
+    def apply(self, res, frame, frame_width, frame_height):
+        for lms in self.landmarks:
+            p0 = res.pose_world_landmarks.landmark[lms[0]]
+            p1 = res.pose_world_landmarks.landmark[lms[1]]
+            p2 = res.pose_world_landmarks.landmark[lms[2]]
+
+            v1 = (p0.x - p1.x, p0.y - p1.y, p0.z - p1.z)
+            v2 = (p2.x - p1.x, p2.y - p1.y, p2.z - p1.z)
+
+            v1 = utils._normalize(v1)
+            v2 = utils._normalize(v2)
+
+            dotp = v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
+
+            angle = degrees(acos(dotp))
+
+            line_color = (0, 255, 0) if 150 < angle < 210 else (0, 0, 255)
+
+            clm = ConnectionLandmark(
+                landmarks=[(lms[0], lms[1]), (lms[1], lms[2])],
+                style={'line-color': line_color}
+            )
+            clm.apply(res, frame, frame_width, frame_height)
+
+
 filters = {
+        '3d': [
+            AngleLandmark(
+                landmarks=[(
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_ELBOW,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    )]
+                ),
+            PointLandmark(
+                landmarks=[
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_ELBOW,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    ]
+                )
+            ],
         'test': [
             ProlongedLandmark(
                 landmarks=[(mp_pose.PoseLandmark.LEFT_WRIST, mp_pose.PoseLandmark.RIGHT_WRIST)],

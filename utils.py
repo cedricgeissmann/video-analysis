@@ -37,8 +37,12 @@ def _get_endpoints(px_0, px_1, length_1=3, length_2=1):
 
 
 def _normalize(vec):
-    assert(len(vec) == 2)
-    magnitude = sqrt(vec[0]**2 + vec[1]**2)
-    return (vec[0] / magnitude, vec[1] / magnitude)
+    if len(vec) == 2:
+        magnitude = sqrt(vec[0]**2 + vec[1]**2)
+        return (vec[0] / magnitude, vec[1] / magnitude)
+    elif len(vec) == 3:
+        magnitude = sqrt(vec[0]**2 + vec[1]**2 + vec[2]**2)
+        return (vec[0] / magnitude, vec[1] / magnitude, vec[2] / magnitude)
+
 
 

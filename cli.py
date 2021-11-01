@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
-import sys
+import argparse
 
 import analyze
 
 if __name__ == "__main__":
-    analyze.analyze(sys.argv[1], sys.argv[2])
+    parser = argparse.ArgumentParser(description="Analyze a video.")
+    parser.add_argument("file")
+    parser.add_argument("--filters")
+    args = parser.parse_args()
+    analyze.analyze(args.file, args.filters)

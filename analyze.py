@@ -37,6 +37,8 @@ def analyze(url: str, selected_filters: list):
         ret, frame = cap.read()
         if not ret:
             break
+        if url == "live":
+            frame = cv2.flip(frame, 1)
 
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         res = pose.process(img)

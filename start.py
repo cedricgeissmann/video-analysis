@@ -24,6 +24,7 @@ if __name__ == "__main__":
     video_frame = Frame(root, width=200, height=800)
     video_frame.pack(side='left')
     videos = sorted(glob.glob("res/*.mp4"))
+    videos.append("live")
     v = StringVar(video_frame, videos[0])
 
     for video in videos:

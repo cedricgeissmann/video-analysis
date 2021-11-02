@@ -186,5 +186,6 @@ filters = {
                         (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, 3, 2),
                         ]
                     )
-                ]
+                ],
+        'empty' : []
         }

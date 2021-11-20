@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from math import acos, degrees
+from math import acos, degrees, sqrt
 import cv2
 
 from . import utils
@@ -40,17 +40,33 @@ class PointLandmark(Landmark):
 class ConnectionLandmark(Landmark):
     def __init__(self, landmarks, style={}):
         assert(len(landmarks) > 0)
-        assert(len(landmarks[0]) == 2)
         Landmark.__init__(self, landmarks, style)
 
     def apply(self, res, frame, frame_width, frame_height):
         for con in self.landmarks:
-            px_0 = utils._get_pixel(con[0], res, frame_width, frame_height)
-            px_1 = utils._get_pixel(con[1], res, frame_width, frame_height)
-            cv2.line(frame, px_0, px_1,
-                self.style['line-color'],
-                self.style['line-width']
-            )
+            if len(con) == 2:
+                px_0 = utils._get_pixel(con[0], res, frame_width, frame_height)
+                px_1 = utils._get_pixel(con[1], res, frame_width, frame_height)
+                cv2.line(frame, px_0, px_1,
+                    self.style['line-color'],
+                    self.style['line-width']
+                )
+            elif len(con) == 4:
+                px_0 = utils._get_pixel(con[0], res, frame_width, frame_height)
+                px_1 = utils._get_pixel(con[1], res, frame_width, frame_height)
+                px_2 = utils._get_pixel(con[2], res, frame_width, frame_height)
+                px_3 = utils._get_pixel(con[3], res, frame_width, frame_height)
+
+                px_1 = utils._get_midpoint(px_1, px_2)
+                cv2.line(frame, px_0, px_1,
+                    self.style['line-color'],
+                    self.style['line-width']
+                )
+                cv2.line(frame, px_1, px_3,
+                    self.style['line-color'],
+                    self.style['line-width']
+                )
+
 
 
 class MidpointLandmark(Landmark):
@@ -111,6 +127,30 @@ class AngleLandmark(Landmark):
                 style={'line-color': line_color}
             )
             clm.apply(res, frame, frame_width, frame_height)
+
+class ClosePoints(Landmark):
+    def apply(self, res, frame, frame_width, frame_height):
+        for lms in self.landmarks:
+            p0 = res.pose_world_landmarks.landmark[lms[0]]
+            p1 = res.pose_world_landmarks.landmark[lms[1]]
+
+            # Project onto xy-plane
+            v0 = (p0.x, p0.y)
+            v1 = (p1.x, p1.y)
+
+            dist = sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
+
+            print(dist)
+            color = (0, 255, 0) if dist < 0.18 else (0, 0, 255)
+
+            px = utils._get_pixel(lms[0], res, frame_width, frame_height)
+            cv2.circle(frame, px,
+                self.style['dot-radius'],
+                color,
+                -1
+            )
+
+
 
 
 
@@ -224,8 +264,23 @@ filters = {
                          mp_pose.PoseLandmark.RIGHT_HIP,
                          mp_pose.PoseLandmark.LEFT_HIP),
                         ],
-                    lengthen_second=200
+                    lengthen_second=200,
+                    style={'line-color': (255,0,255)}
                     )
                 ],
-        'empty' : []
+        'empty' : [],
+        'close': [
+                ClosePoints(landmarks=[(
+                    mp_pose.PoseLandmark.RIGHT_WRIST,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    )])
+                ],
+        'con': [
+                ConnectionLandmark(landmarks=[(
+                    mp_pose.PoseLandmark.RIGHT_ANKLE,
+                    mp_pose.PoseLandmark.RIGHT_HIP,
+                    mp_pose.PoseLandmark.LEFT_HIP,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    )])
+                ]
         }

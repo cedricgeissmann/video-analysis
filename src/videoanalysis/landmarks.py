@@ -113,6 +113,31 @@ class AngleLandmark(Landmark):
             clm.apply(res, frame, frame_width, frame_height)
 
 
+
+class ProlongedMidpointsLandmark(Landmark):
+    def __init__(self, landmarks, style={}, lengthen_first=0, lengthen_second=0):
+        super().__init__(landmarks, style=style)
+        self.lengthen_first = lengthen_first
+        self.lengthen_second = lengthen_second
+
+    def apply(self, res, frame, frame_width, frame_height):
+        for line in self.landmarks:
+
+            px_0 = utils._get_pixel(line[0], res, frame_width, frame_height)
+            px_1 = utils._get_pixel(line[1], res, frame_width, frame_height)
+            px_2 = utils._get_pixel(line[2], res, frame_width, frame_height)
+            px_3 = utils._get_pixel(line[3], res, frame_width, frame_height)
+
+            if px_0 != None and px_1 != None and px_2 != None and px_3 != None:
+                m1 = utils._get_midpoint(px_0, px_1)
+                m2 = utils._get_midpoint(px_2, px_3)
+
+                endpoints = utils._get_endpoints(m1, m2, self.lengthen_first, self.lengthen_second)
+                cv2.line(frame, endpoints[0], endpoints[1],
+                    self.style['line-color'],
+                    self.style['line-width']
+                )
+
 filters = {
         '3d': [
             AngleLandmark(
@@ -120,6 +145,10 @@ filters = {
                     mp_pose.PoseLandmark.LEFT_SHOULDER,
                     mp_pose.PoseLandmark.LEFT_ELBOW,
                     mp_pose.PoseLandmark.LEFT_WRIST,
+                    ), (
+                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_WRIST,
                     )]
                 ),
             PointLandmark(
@@ -185,6 +214,17 @@ filters = {
                     landmarks=[
                         (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, 3, 2),
                         ]
+                    )
+                ],
+        'middle_axis': [
+                ProlongedMidpointsLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                         mp_pose.PoseLandmark.LEFT_SHOULDER,
+                         mp_pose.PoseLandmark.RIGHT_HIP,
+                         mp_pose.PoseLandmark.LEFT_HIP),
+                        ],
+                    lengthen_second=200
                     )
                 ],
         'empty' : []

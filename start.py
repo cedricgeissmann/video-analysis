@@ -10,7 +10,7 @@ from videoanalysis import analyze
 if __name__ == "__main__":
     root = Tk()
 
-    root.geometry('500x1000')
+    root.geometry('500x500')
     bottom_frame = Frame(root, width=500, height=50)
     bottom_frame.pack(side='bottom')
     btn_exit = Button(bottom_frame, text = 'Exit', bd = '5',

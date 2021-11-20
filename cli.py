@@ -2,7 +2,7 @@
 
 import argparse
 
-import analyze
+from videoanalysis import analyze
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze a video.")

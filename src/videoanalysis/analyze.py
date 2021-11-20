@@ -4,7 +4,7 @@ import mediapipe as mp
 import os
 from pathlib import Path
 
-from landmarks import filters
+from .landmarks import filters
 
 mp_pose = mp.solutions.pose
 

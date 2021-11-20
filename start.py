@@ -4,7 +4,7 @@ from tkinter import *
 import glob
 import os
 
-import analyze
+from videoanalysis import analyze
 
 
 if __name__ == "__main__":

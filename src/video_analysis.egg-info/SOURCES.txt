@@ -1,0 +1,14 @@
+.gitignore
+analyze.py
+cli.py
+init.sh
+landmarks.py
+requirements.txt
+setup.py
+start.py
+utils.py
+src/video_analysis.egg-info/PKG-INFO
+src/video_analysis.egg-info/SOURCES.txt
+src/video_analysis.egg-info/dependency_links.txt
+src/video_analysis.egg-info/requires.txt
+src/video_analysis.egg-info/top_level.txt

@@ -2,7 +2,7 @@ from abc import abstractmethod
 from math import acos, degrees
 import cv2
 
-import utils
+from . import utils
 
 import mediapipe as mp
 mp_pose = mp.solutions.pose

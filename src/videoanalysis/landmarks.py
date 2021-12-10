@@ -402,232 +402,233 @@ filters = {
                 ProlongedMidpointsLandmark(
                     landmarks=[
                         (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                         mp_pose.PoseLandmark.LEFT_SHOULDER,
-                         mp_pose.PoseLandmark.RIGHT_HIP,
-                         mp_pose.PoseLandmark.LEFT_HIP),
+                            mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_HIP,
+                            mp_pose.PoseLandmark.LEFT_HIP),
                         ],
                     lengthen_second=200
                     ),
 
                 AngleLandmark(
-                landmarks=[
+                    landmarks=[
 
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    )]
-                ),
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST,
+                            )]
+                        ),
 
                 ],
 
-            'middle_axis3': [
+        'middle_axis3': [
                 ProlongedMidpointsLandmark(
                     landmarks=[
                         (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                         mp_pose.PoseLandmark.RIGHT_ANKLE,
-                         mp_pose.PoseLandmark.RIGHT_HIP,
-                         mp_pose.PoseLandmark.LEFT_HIP),
+                            mp_pose.PoseLandmark.RIGHT_ANKLE,
+                            mp_pose.PoseLandmark.RIGHT_HIP,
+                            mp_pose.PoseLandmark.LEFT_HIP),
                         ],
                     lengthen_second=200
                     ),
 
                 AngleLandmark(
-                landmarks=[
+                    landmarks=[
 
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    )]
-                ),
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST,
+                            )]
+                        ),
 
                 ],
 
-            'Gestreckter Arm Verlängerung rechts Tennis': [
+        'Gestreckter Arm Verlängerung rechts Tennis': [
 
                 PointLandmark(
                     landmarks=[
                         mp_pose.PoseLandmark.LEFT_SHOULDER,
                         mp_pose.PoseLandmark.LEFT_ELBOW,
                         mp_pose.PoseLandmark.LEFT_WRIST,
-                    ]
-                ),
+                        ]
+                    ),
                 ProlongedLandmark(
                     landmarks=[
                         (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                         mp_pose.PoseLandmark.LEFT_ELBOW,
-                         mp_pose.PoseLandmark.LEFT_WRIST),
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST),
                         ],
                     lengthen_first=300,
                     style = {
                         'line-color': (153, 255, 255),
                         'line-width': 2
-                            },
-                ),
+                        },
+                    ),
 
                 ConnectionLandmark(
                     landmarks=[
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
-                    (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
-                    ],
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
+                        (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
+                        ],
 
-                ),
+                    ),
 
                 AngleLandmark (
                     landmarks=[
 
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST),
-                    ],
-                )],
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST),
+                        ],
+                    )],
 
             'Gestreckter Arm Verlängerung rechts Badminton': [
 
+                    PointLandmark(
+                        landmarks=[
+                            mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST,
+                            ]
+                        ),
+                    ProlongedLandmark(
+                        landmarks=[
+                            (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                                mp_pose.PoseLandmark.LEFT_ELBOW,
+                                mp_pose.PoseLandmark.LEFT_WRIST),
+                            ],
+                        lengthen_first=250,
+                        style = {
+                            'line-color': (153, 255, 255),
+                            'line-width': 2
+                            },
+                        ),
+
+                    ConnectionLandmark(
+                        landmarks=[
+                            (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
+                            (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
+                            ],
+
+                        ),
+
+                    AngleLandmark (
+                        landmarks=[
+
+                            (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                                mp_pose.PoseLandmark.LEFT_ELBOW,
+                                mp_pose.PoseLandmark.LEFT_WRIST),
+                            ],
+                        )],
+
+            'Gestreckter Arm Verlängerung links Tennis': [
+
+                    PointLandmark(
+                        landmarks=[
+                            mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_ELBOW,
+                            mp_pose.PoseLandmark.RIGHT_WRIST,
+                            ]
+                        ),
+                    ProlongedLandmark(
+                        landmarks=[
+                            (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                                mp_pose.PoseLandmark.RIGHT_ELBOW,
+                                mp_pose.PoseLandmark.RIGHT_WRIST),
+                            ],
+                        lengthen_first=300,
+                        style = {
+                            'line-color': (153, 255, 255),
+                            'line-width': 2
+                            },
+                        ),
+
+                    ConnectionLandmark(
+                        landmarks=[
+                            (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
+                            (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
+                            ],
+
+                        ),
+
+                    AngleLandmark (
+                        landmarks=[
+
+                            (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                                mp_pose.PoseLandmark.RIGHT_ELBOW,
+                                mp_pose.PoseLandmark.RIGHT_WRIST),
+                            ],
+                        )],
+
+'Gestreckter Arm Verlängerung links Badminton': [
+
+        PointLandmark(
+            landmarks=[
+                mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                mp_pose.PoseLandmark.RIGHT_ELBOW,
+                mp_pose.PoseLandmark.RIGHT_WRIST,
+                ]
+            ),
+        ProlongedLandmark(
+            landmarks=[
+                (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_WRIST),
+                ],
+            lengthen_first=250,
+            style = {
+                'line-color': (153, 255, 255),
+                'line-width': 2
+                },
+            ),
+
+        ConnectionLandmark(
+            landmarks=[
+                (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
+                (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
+                ],
+
+            ),
+
+        AngleLandmark (
+            landmarks=[
+
+                (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_WRIST),
+                ],
+            )],
+
+        'empty': [
+                ProlongedMidpointsLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_HIP,
+                            mp_pose.PoseLandmark.LEFT_HIP),
+                        ],
+                    lengthen_second=200
+                    ),
+
+                AngleLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_ELBOW,
+                            mp_pose.PoseLandmark.RIGHT_WRIST,),
+
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_ELBOW,
+                            mp_pose.PoseLandmark.LEFT_WRIST,
+                            )]
+                        ),
                 PointLandmark(
                     landmarks=[
                         mp_pose.PoseLandmark.LEFT_SHOULDER,
                         mp_pose.PoseLandmark.LEFT_ELBOW,
                         mp_pose.PoseLandmark.LEFT_WRIST,
-                    ]
-                ),
-                ProlongedLandmark(
-                    landmarks=[
-                        (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                         mp_pose.PoseLandmark.LEFT_ELBOW,
-                         mp_pose.PoseLandmark.LEFT_WRIST),
-                        ],
-                    lengthen_first=250,
-                    style = {
-                        'line-color': (153, 255, 255),
-                        'line-width': 2
-                            },
-                ),
-
-                ConnectionLandmark(
-                    landmarks=[
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
-                    (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
-                    ],
-
-                ),
-
-                AngleLandmark (
-                    landmarks=[
-
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST),
-                    ],
-                )],
-
-            'Gestreckter Arm Verlängerung links Tennis': [
-
-                PointLandmark(
-                    landmarks=[
                         mp_pose.PoseLandmark.RIGHT_SHOULDER,
                         mp_pose.PoseLandmark.RIGHT_ELBOW,
                         mp_pose.PoseLandmark.RIGHT_WRIST,
-                    ]
-                ),
-                ProlongedLandmark(
-                    landmarks=[
-                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                         mp_pose.PoseLandmark.RIGHT_ELBOW,
-                         mp_pose.PoseLandmark.RIGHT_WRIST),
-                        ],
-                    lengthen_first=300,
-                    style = {
-                        'line-color': (153, 255, 255),
-                        'line-width': 2
-                            },
-                ),
-
-                ConnectionLandmark(
-                    landmarks=[
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
-                    (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
-                    ],
-
-                ),
-
-                AngleLandmark (
-                    landmarks=[
-
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST),
-                    ],
-                )],
-
-'Gestreckter Arm Verlängerung links Badminton': [
-
-                PointLandmark(
-                    landmarks=[
-                        mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                        mp_pose.PoseLandmark.RIGHT_ELBOW,
-                        mp_pose.PoseLandmark.RIGHT_WRIST,
-                    ]
-                ),
-                ProlongedLandmark(
-                    landmarks=[
-                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                         mp_pose.PoseLandmark.RIGHT_ELBOW,
-                         mp_pose.PoseLandmark.RIGHT_WRIST),
-                        ],
-                    lengthen_first=250,
-                    style = {
-                        'line-color': (153, 255, 255),
-                        'line-width': 2
-                            },
-                ),
-
-                ConnectionLandmark(
-                    landmarks=[
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
-                    (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
-                    ],
-
-                ),
-
-                AngleLandmark (
-                    landmarks=[
-
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST),
-                    ],
-                )],
-
-                'empty': [
-            ProlongedMidpointsLandmark(
-                    landmarks=[
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                     mp_pose.PoseLandmark.LEFT_SHOULDER,
-                     mp_pose.PoseLandmark.RIGHT_HIP,
-                     mp_pose.PoseLandmark.LEFT_HIP),
-                ],
-                lengthen_second=200
-            ),
-
-            AngleLandmark(
-                landmarks=[
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST,),
-
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    )]
-                ),
-            PointLandmark(
-                landmarks=[
-                    mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST,
-                    ]
-            )
-            ]}
+                        ]
+                    )
+                ]
+        }

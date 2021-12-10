@@ -68,6 +68,28 @@ class ConnectionLandmark(Landmark):
                 )
 
 
+class ClosePoints(Landmark):
+    def apply(self, res, frame, frame_width, frame_height):
+        for lms in self.landmarks:
+            p0 = res.pose_world_landmarks.landmark[lms[0]]
+            p1 = res.pose_world_landmarks.landmark[lms[1]]
+
+            # Project onto xy-plane
+            v0 = (p0.x, p0.y)
+            v1 = (p1.x, p1.y)
+
+            dist = sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
+
+            print(dist)
+            color = (0, 255, 0) if dist < 0.18 else (0, 0, 255)
+
+            px = utils._get_pixel(lms[0], res, frame_width, frame_height)
+            cv2.circle(frame, px,
+                self.style['dot-radius'],
+                color,
+                -1
+            )
+
 
 class MidpointLandmark(Landmark):
     def apply(self, res, frame, frame_width, frame_height):
@@ -128,30 +150,34 @@ class AngleLandmark(Landmark):
             )
             clm.apply(res, frame, frame_width, frame_height)
 
-class ClosePoints(Landmark):
+
+class AngleHIPLandmark(Landmark):
     def apply(self, res, frame, frame_width, frame_height):
         for lms in self.landmarks:
             p0 = res.pose_world_landmarks.landmark[lms[0]]
             p1 = res.pose_world_landmarks.landmark[lms[1]]
+            p2 = res.pose_world_landmarks.landmark[lms[2]]
+            p3 = res.pose_world_landmarks.landmark[lms[3]]
 
-            # Project onto xy-plane
-            v0 = (p0.x, p0.y)
-            v1 = (p1.x, p1.y)
+            m = ((p1.x + p2.x)/2, (p1.y + p2.y)/2, (p1.z + p2.z)/2)
 
-            dist = sqrt((v0[0] - v1[0])**2 + (v0[1] - v1[1])**2)
+            v1 = (p0.x - m[0], p0.y - m[1], p0.z - m[2])
+            v2 = (p3.x - m[0], p3.y - m[1], p3.z - m[2])
 
-            print(dist)
-            color = (0, 255, 0) if dist < 0.18 else (0, 0, 255)
+            v1 = utils._normalize(v1)
+            v2 = utils._normalize(v2)
 
-            px = utils._get_pixel(lms[0], res, frame_width, frame_height)
-            cv2.circle(frame, px,
-                self.style['dot-radius'],
-                color,
-                -1
+            dotp = v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
+
+            angle = degrees(acos(dotp))
+
+            line_color = (0, 255, 0) if 170 < angle < 190 else (0, 0, 255)
+
+            clm = ConnectionLandmark(
+                landmarks=[(lms[0], lms[1], lms[2], lms[3])],
+                style={'line-color': line_color}
             )
-
-
-
+            clm.apply(res, frame, frame_width, frame_height)
 
 
 class ProlongedMidpointsLandmark(Landmark):
@@ -186,11 +212,11 @@ filters = {
                     mp_pose.PoseLandmark.LEFT_ELBOW,
                     mp_pose.PoseLandmark.LEFT_WRIST,
                     ), (
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST,
-                    )]
-                ),
+                        mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                        mp_pose.PoseLandmark.RIGHT_ELBOW,
+                        mp_pose.PoseLandmark.RIGHT_WRIST,
+                        )]
+                    ),
             PointLandmark(
                 landmarks=[
                     mp_pose.PoseLandmark.LEFT_SHOULDER,
@@ -230,45 +256,133 @@ filters = {
                 )
             ],
         'straight_arms': [
-            PointLandmark(
-                landmarks=[
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_WRIST,
-                    mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.LEFT_WRIST,
-                    ]
-                ),
-            ConnectionLandmark(
-                landmarks=[
-                    (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
-                    (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
-                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
-                    (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
-                    ]
-                )
-            ],
+                PointLandmark(
+                    landmarks=[
+                        mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                        mp_pose.PoseLandmark.RIGHT_ELBOW,
+                        mp_pose.PoseLandmark.RIGHT_WRIST,
+                        mp_pose.PoseLandmark.LEFT_SHOULDER,
+                        mp_pose.PoseLandmark.LEFT_ELBOW,
+                        mp_pose.PoseLandmark.LEFT_WRIST,
+                        ]
+                    ),
+                ConnectionLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
+                        (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
+                        (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
+                        (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
+                        ]
+                    )
+                ],
         'setter': [
                 ProlongedLandmark(
-                    landmarks=[
-                        (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, 3, 2),
-                        ]
+                    landmarks=[(mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP)],
+                    lengthen_second=200,
                     )
                 ],
         'middle_axis': [
                 ProlongedMidpointsLandmark(
                     landmarks=[
                         (mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                         mp_pose.PoseLandmark.LEFT_SHOULDER,
-                         mp_pose.PoseLandmark.RIGHT_HIP,
-                         mp_pose.PoseLandmark.LEFT_HIP),
+                            mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_HIP,
+                            mp_pose.PoseLandmark.LEFT_HIP),
                         ],
                     lengthen_second=200,
                     style={'line-color': (255,0,255)}
                     )
                 ],
-        'empty' : [],
+
+    'Badminton': [
+            AngleLandmark(
+                landmarks=[(
+                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_WRIST,
+                    )],) ,
+
+                PointLandmark(
+                    landmarks=[
+                        mp_pose.PoseLandmark.RIGHT_WRIST,
+                        ]
+                    ) ,
+                ProlongedMidpointsLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                            mp_pose.PoseLandmark.LEFT_SHOULDER,
+                            mp_pose.PoseLandmark.RIGHT_HIP,
+                            mp_pose.PoseLandmark.LEFT_HIP),
+                        ],
+                    lengthen_second=200 ,
+                    style={'color': (255, 0, 255)}
+                    )
+                ],
+
+    'Fuss_Huefte_Schulter_Winkel': [
+            AngleHIPLandmark(
+                landmarks=[(
+                    mp_pose.PoseLandmark.RIGHT_WRIST,
+                    mp_pose.PoseLandmark.RIGHT_HIP,
+                    mp_pose.PoseLandmark.LEFT_HIP,
+                    mp_pose.PoseLandmark.LEFT_ANKLE,
+                    )]
+                ),
+            ],
+    'Handstand3': [
+            AngleLandmark(
+                landmarks=[(
+                    mp_pose.PoseLandmark.LEFT_ANKLE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    ), ]
+                ),
+            PointLandmark(
+                landmarks=[
+                    mp_pose.PoseLandmark.LEFT_ANKLE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    ]
+                )],
+
+'Hdst4': [
+        AngleLandmark(
+            landmarks=[(
+                mp_pose.PoseLandmark.LEFT_HIP,
+                mp_pose.PoseLandmark.LEFT_SHOULDER,
+                mp_pose.PoseLandmark.LEFT_WRIST,
+
+                ), (mp_pose.PoseLandmark.LEFT_ANKLE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_WRIST,
+                    ) ]
+                ),
+        PointLandmark(
+            landmarks=[
+                mp_pose.PoseLandmark.LEFT_HIP,
+                mp_pose.PoseLandmark.LEFT_SHOULDER,
+                mp_pose.PoseLandmark.LEFT_WRIST,
+                mp_pose.PoseLandmark.LEFT_ANKLE
+                ]
+            )],
+
+        'Hilfslinie': [
+                ProlongedLandmark(
+                    landmarks=[(mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_WRIST)],
+                    lengthen_second=300,
+                    style={
+                        "line-color": (0, 200, 200),
+                        "line-width": 2
+                        }
+                    ),
+                ConnectionLandmark(
+                    landmarks=[
+                        (mp_pose.PoseLandmark.RIGHT_WRIST, mp_pose.PoseLandmark.RIGHT_SHOULDER),
+                        (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP),
+                        (mp_pose.PoseLandmark.RIGHT_HIP, mp_pose.PoseLandmark.RIGHT_ANKLE),
+                        ]
+                    )
+                ],
         'close': [
                 ClosePoints(landmarks=[(
                     mp_pose.PoseLandmark.RIGHT_WRIST,

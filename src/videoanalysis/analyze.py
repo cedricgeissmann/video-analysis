@@ -8,6 +8,15 @@ from .landmarks import filters
 
 mp_pose = mp.solutions.pose
 
+class Globals:
+    buffer = []
+    def __init__(self, buffer_size=0):
+        self.buffer_size = buffer_size
+
+
+g = Globals(buffer_size=1)
+
+
 def analyze(url: str, selected_filters: list):
     """
     Analyze a given video or directly from the webcam.
@@ -40,6 +49,11 @@ def analyze(url: str, selected_filters: list):
         if url == "live":
             frame = cv2.flip(frame, 1)
 
+        g.buffer.append(frame)
+        if len(g.buffer) < g.buffer_size:
+            continue
+        frame = g.buffer.pop(0)
+
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         res = pose.process(img)
         if res.pose_landmarks == None:
@@ -54,8 +68,20 @@ def analyze(url: str, selected_filters: list):
         cv2.imshow('cam', frame)
         out.write(frame)
 
-        if cv2.waitKey(1) & 0xFF == 27:
+        key_code = cv2.waitKey(1);
+        if key_code & 0xFF == 27:
             break
+        elif key_code & 0xFF != 255:
+            handle_keys(key_code)
     cap.release()
     out.release()
     cv2.destroyAllWindows()
+
+
+def handle_keys(key_code):
+    if key_code == ord('k'):
+        g.buffer_size = min(g.buffer_size + 15, 30 * 10)
+    elif key_code == ord('j'):
+        g.buffer_size = max(g.buffer_size - 15, 1)
+        while len(g.buffer) > g.buffer_size + 1:
+            g.buffer.pop(0)

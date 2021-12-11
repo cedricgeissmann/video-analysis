@@ -17,7 +17,7 @@ if __name__ == "__main__":
                               command = root.destroy)
     btn_exit.pack(side='right')
     btn_analyze = Button(bottom_frame, text = 'Analyze', bd = '5',
-            command = lambda: analyze.analyze(v.get(), f.get()))
+            command = lambda: analyze.analyze(v.get(), f.get(), webcam=w.get()))
     btn_analyze.pack(side='left')
 
     ## Create part for video selection
@@ -25,11 +25,16 @@ if __name__ == "__main__":
     video_frame.pack(side='left')
     videos = sorted(glob.glob("res/*.mp4"))
     videos.append("live")
+    videos.append("webcam")
     v = StringVar(video_frame, videos[0])
 
     for video in videos:
         Radiobutton(video_frame, text = os.path.basename(video), variable = v,
             value = video).pack(side = TOP, ipady = 5)
+
+    Label(video_frame, text="Webcam: ").pack(side=LEFT)
+    w = Entry(video_frame)
+    w.pack(side=RIGHT)
 
     ## Create part for filter selection
     filter_frame = Frame(root, width=300, height=800)

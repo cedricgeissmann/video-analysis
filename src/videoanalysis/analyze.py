@@ -17,7 +17,7 @@ class Globals:
 g = Globals(buffer_size=1)
 
 
-def analyze(url: str, selected_filters: list):
+def analyze(url: str, selected_filters: list, **kwargs):
     """
     Analyze a given video or directly from the webcam.
 
@@ -28,10 +28,16 @@ def analyze(url: str, selected_filters: list):
     apply to the video. If the filter you are looking for does not exist,
     simple create a new one.
     """
-    cap = cv2.VideoCapture(0) if url == "live" else cv2.VideoCapture(url)
+    if url == "live":
+        cap = cv2.VideoCapture(0)
+        filename = "live.mp4"
+    elif url == "webcam":
+        cap = cv2.VideoCapture(kwargs["webcam"])
+        filename = "webcam.mp4"
+    else:
+        cap = cv2.VideoCapture(url)
+        filename = os.path.basename(url)
     pose = mp_pose.Pose()
-
-    filename = os.path.basename(url) if url != "live" else "live.mp4"
 
     cv2.namedWindow('cam', cv2.WINDOW_NORMAL)
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -49,10 +55,11 @@ def analyze(url: str, selected_filters: list):
         if url == "live":
             frame = cv2.flip(frame, 1)
 
-        g.buffer.append(frame)
-        if len(g.buffer) < g.buffer_size:
-            continue
-        frame = g.buffer.pop(0)
+        if not url == "webcam":
+            g.buffer.append(frame)
+            if len(g.buffer) < g.buffer_size:
+                continue
+            frame = g.buffer.pop(0)
 
         img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         res = pose.process(img)
